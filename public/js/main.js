@@ -1,51 +1,56 @@
-const express = require('express'),
-  cookie = require('cookie-session'),
-  app = express()
+// FRONT-END (CLIENT) JAVASCRIPT HERE
 
-// use express.urlencoded to get data sent by defaut form actions
-// or GET requests
-app.use(express.urlencoded({ extended: true }))
+const submit = async function (event) {
+  // stop form submission from trying to load
+  // a new .html page for displaying results...
+  // this was the original browser behavior and still
+  // remains to this day
+  event.preventDefault()
 
-// cookie middleware! The keys are used for encryption and should be
-// changed
-app.use(cookie({
-  name: 'session',
-  keys: ['key1', 'key2']
-}))
+  // get the value of the input fields for Task and Date
+  const input = document.querySelector("#Task"),
+    json = { Task: input.value },
+    TBody = JSON.stringify(json)
 
-app.post('/login', (req, res) => {
-  // express.urlencoded will put your key value pairs 
-  // into an object, where the key is the name of each
-  // form field and the value is whatever the user entered
-  console.log(req.body)
+  const dateInput = document.querySelector("#Duedate"),
+    json2 = { Duedate: dateInput.value },
+    DBody = JSON.stringify(json2)
 
-  // below is *just a simple authentication example* 
-  // for A3, you should check username / password combos in your database
-  if (req.body.password === 'test') {
-    // define a variable that we can check in other middleware
-    // the session object is added to our requests by the cookie-session middleware
-    req.session.login = true
+  //comebine into one object
+  body = "{" + TBody.slice(1, -1) + "," + DBody.slice(1)
 
-    // since login was successful, send the user to the main content
-    // use redirect to avoid authentication problems when refreshing
-    // the page or using the back button, for details see:
-    // https://stackoverflow.com/questions/10827242/understanding-the-post-redirect-get-pattern 
-    res.redirect('main.html')
-  } else {
-    // password incorrect, redirect back to login page
-    res.sendFile(__dirname + '/public/index.html')
+  // send the data to the server using fetch()
+  const response = await fetch("/login", {
+    method: "POST",
+    body
+  })
+
+  // read response
+  const text = await response.text()
+
+  const data = JSON.parse(text)
+  console.log("data:", data)
+
+  //add each task to todolist
+  const list = document.getElementById("todolist");
+  list.innerHTML = "";
+  for (let i = 0; i < data.length; i++) {
+    const item = document.createElement("li");
+    item.textContent = data[i]["Task"];
+    if (data[i]["Overdue"]) {
+      item.style.color = "red";
+    }
+    else {
+      item.style.color = "green";
+    }
+    list.appendChild(item);
   }
-})
 
-// add some middleware that always sends unauthenicaetd users to the login page
-app.use(function (req, res, next) {
-  if (req.session.login === true)
-    next()
-  else
-    res.sendFile(__dirname + '/public/index.html')
-})
+  console.log("text:", text)
 
-// serve up static files in the directory public
-app.use(express.static('public'))
+}
 
-app.listen(3000)
+window.onload = function () {
+  const button = document.querySelector("button");
+  button.onclick = submit;
+}
