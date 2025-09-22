@@ -8,16 +8,16 @@ const submit = async function (event) {
   event.preventDefault()
 
   // get the value of the input fields for Task and Date
-  const input = document.querySelector("#Task"),
-    json = { Task: input.value },
-    TBody = JSON.stringify(json)
+  const input = document.querySelector("#username"),
+    json = { username: input.value },
+    UBody = JSON.stringify(json)
 
-  const dateInput = document.querySelector("#Duedate"),
-    json2 = { Duedate: dateInput.value },
-    DBody = JSON.stringify(json2)
+  const passwordInput = document.querySelector("#password"),
+    json2 = { password: passwordInput.value },
+    PBody = JSON.stringify(json2)
 
   //comebine into one object
-  body = "{" + TBody.slice(1, -1) + "," + DBody.slice(1)
+  body = "{" + UBody.slice(1, -1) + "," + PBody.slice(1)
 
   // send the data to the server using fetch()
   const response = await fetch("/login", {
@@ -48,9 +48,4 @@ const submit = async function (event) {
 
   console.log("text:", text)
 
-}
-
-window.onload = function () {
-  const button = document.querySelector("button");
-  button.onclick = submit;
 }
