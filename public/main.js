@@ -1,4 +1,5 @@
 // FRONT-END (CLIENT) JAVASCRIPT HERE
+// gets information from server and displays it in main.HTML
 
 const submit = async function (event) {
   // stop form submission from trying to load
