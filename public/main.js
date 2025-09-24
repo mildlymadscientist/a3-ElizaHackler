@@ -48,6 +48,12 @@ function loadPosts() {
 }
 
 window.onload = function () {
+  // Check if this is a new user
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('newUser') === 'true') {
+    alert('Account created!');
+  }
+
   // Fetch and display username
   fetch('/get-username')
     .then(res => res.json())

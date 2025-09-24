@@ -152,4 +152,7 @@ Include a very brief summary of your project here. Images are encouraged, along 
 
 
 Sources:
+CS guides, in class practice, and a2
+Non-Designer's Design Book
 https://www.w3schools.com/jsref/met_win_prompt.asp
+https://www.w3schools.com/jsref/met_win_alert.asp

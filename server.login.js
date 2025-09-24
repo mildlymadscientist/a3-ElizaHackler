@@ -72,7 +72,7 @@ app.post('/login', async (req, res) => {
       const result = await collectionUsers.insertOne({ username, password });
       loggedInUser = username;
       console.log(`New user created with id: ${result.insertedId}`);
-      return res.redirect('/main.HTML');
+      return res.redirect('/main.HTML?newUser=true');
     }
   } catch (err) {
     console.error("Database error:", err);
