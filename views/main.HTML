@@ -4,33 +4,36 @@
 <head>
     <title>CS4241 Assignment 3 main</title>
     <meta charset="utf-8">
-    <script src="js/main.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tuicss@2.1.0/dist/tuicss.min.css">
 
     <!-- get rid of favicon error -->
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
-    </style>
 </head>
 
 <body>
-
-    <form>
-        <p>
-            <input type="textarea" id="newPost" name="newPost" placeholder="Create a new post" />
-        </p>
-        <p class="button">
+    <div class="container">
+        <h3 id="usernameDisplay"></h3>
+        <h1>Welcome to your blog!</h1>
+        <div id="usernameDisplay"></div>
+        <form id="postForm">
+            <div class="mb-3">
+                <label for="newPost" class="form-label">Create a new post</label>
+                <textarea id="newPost" name="newPost" class="form-control" rows="3"
+                    placeholder="Write your post here..."></textarea>
+            </div>
+            <br>
+            Pick a color!......: <input class="tui-input" type="color" value="#00FF00" id="postColor" /><br>
             <button type="submit">Post</button>
-        </p>
-    </form>
 
-    <h1>Previous posts</h1>
-    <ul>
-        <li> </li>
-    </ul>
+        </form>
+
+        <h1>Previous posts</h1>
+        <ul id="postsList">
+        </ul>
+    </div>
+
+    <script src="/main.js"></script>
+
 </body>
 
 </html>

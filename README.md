@@ -135,14 +135,6 @@ Include a very brief summary of your project here. Images are encouraged, along 
 ### Design/Evaluation Achievements
 - **Design Achievement 1**: I followed the following tips from the W3C Web Accessibility Initiative...
 
-1) create backend to do login
-
-2) create backend to do mongodb
-
-3) login frontend
-
-4) information display
-
 5) add, remove, delete
 
 6) 90 on score

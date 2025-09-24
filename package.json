@@ -4,7 +4,7 @@
   "description": "",
   "author": "",
   "scripts": {
-    "start": "node server.improved.js"
+    "start": "node server.login.js"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
@@ -12,7 +12,8 @@
     "express": "^5.1.0",
     "i": "^0.3.7",
     "mime": "^2.6.0",
-    "mongodb": "^6.20.0"
+    "mongodb": "^6.20.0",
+    "tuicss": "^2.1.2"
   },
   "engines": {
     "node": "16.x"
