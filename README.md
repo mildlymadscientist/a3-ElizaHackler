@@ -135,6 +135,21 @@ Include a very brief summary of your project here. Images are encouraged, along 
 ### Design/Evaluation Achievements
 - **Design Achievement 1**: I followed the following tips from the W3C Web Accessibility Initiative...
 
-5) add, remove, delete
+8) user needs to be notified about new account creation
 
-6) 90 on score
+10) proper commenting
+
+11) host
+
+12) write about CRAP
+
+13) Implement 12 accessibility tips
+
+13) check lighthouse scores
+
+14) simplify login
+
+
+
+Sources:
+https://www.w3schools.com/jsref/met_win_prompt.asp

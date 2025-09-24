@@ -21,12 +21,17 @@ const client = new MongoClient(uri, {
   }
 });
 
-let collection = null
+let collectionUsers = null
+let collectionPosts = null
+let loggedInUser = null
 
 async function run() {
   try {
     await client.connect();
-    collection = client.db("blogDatabase").collection("blogUsers");
+
+    //connect to blogUsers and blogPosts databases
+    collectionUsers = client.db("blogDatabase").collection("blogUsers");
+    collectionPosts = client.db("blogDatabase").collection("blogPosts");
     await client.db("blogDatabase").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } catch (err) {
@@ -35,46 +40,79 @@ async function run() {
 }
 
 app.use((req, res, next) => {
-  if (collection !== null) {
+  if (collectionUsers !== null) {
     next()
   } else {
     res.status(503).send()
   }
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  if (
-    username === process.env.USERNM &&
-    password === process.env.PASS
-  ) {
 
-    return res.redirect('/main.html');
+  try {
+    // Check if user exists
+    const user = await collectionUsers.findOne({ username });
+
+    if (user) {
+      // User exists, check password
+      if (user.password === password) {
+        // Login success
+        loggedInUser = username;
+        console.log("Login successful for user: " + username);
+        return res.redirect('/main.HTML');
+      } else {
+        // Incorrect password
+        console.log("Incorrect password for user: " + username);
+        return res.sendFile(__dirname + '/views/index.html');
+      }
+    } else {
+      // User doesn't exist, create new user
+      console.log("Creating new user: " + username);
+      const result = await collectionUsers.insertOne({ username, password });
+      loggedInUser = username;
+      console.log(`New user created with id: ${result.insertedId}`);
+      return res.redirect('/main.HTML');
+    }
+  } catch (err) {
+    console.error("Database error:", err);
+    return res.status(500).send('Database error');
   }
-  else if (username !== process.env.USERNM) {
-    //create new user with username and password
-    collection.insertOne({ username: username, password: password })
-      .then(result => {
-        console.log(`New user created with the following id: ${result.insertedId}`);
-      })
-      .catch(err => {
-        console.error(err);
-        res.status(500).json({ error: 'Database error' });
-      });
-
-
-    return res.redirect('/main.html');
-  } else {
-
-    res.sendFile(__dirname + '/views/index.html')
-  };
 });
 
+// app.post('/login', (req, res) => {
+//   const { username, password } = req.body;
+//   //if username and password pair are in blogUsers database
+//   if (collectionUsers.findOne({ username, password }) !== null) {
+//     loggedInUser = username;
+//     return res.redirect('/main.html');
+//   }
+//   //if cannot find username in database
+//   else if (collectionUsers.findOne({ username }) === null) {
+//     console.log("Creating new user: " + username);
+//     //create new user with username and password
+//     collectionUsers.insertOne({ username: username, password: password })
+//       .then(result => {
+//         console.log(`New user created with the following id: ${result.insertedId}`);
+//       })
+//       .catch(err => {
+//         console.error(err);
+//         res.status(500).json({ error: 'Database error' });
+//       });
+
+//     loggedInUser = username;
+//     return res.redirect('/main.html');
+//   } else {
+//     console.log("Incorrect password for user: " + username);
+//     res.sendFile(__dirname + '/views/index.html')
+//   };
+// });
+
 app.get('/user-posts', async (req, res) => {
-  if (collection !== null) {
-    const username = process.env.USERNM;
+  if (collectionPosts !== null) {
+    const username = loggedInUser;
     try {
-      const posts = await collection.find({ username: username }).toArray();
+      const posts = await collectionPosts.find({ username: username }).toArray();
       res.json(posts);
     } catch (err) {
       console.error(err);
@@ -87,11 +125,11 @@ app.get('/user-posts', async (req, res) => {
 
 //add post attached to post button
 app.post('/add', async (req, res) => {
-  if (collection !== null) {
+  if (collectionPosts !== null) {
     const { post, username, color } = req.body;
     const date = new Date();
-    await collection.insertOne({ username, post, date, color });
-    const posts = await collection.find({ username }).toArray();
+    await collectionPosts.insertOne({ username, post, date, color });
+    const posts = await collectionPosts.find({ username }).toArray();
     res.json(posts);
   } else {
     res.status(503).json({ error: 'Database not connected' });
@@ -101,7 +139,7 @@ app.post('/add', async (req, res) => {
 //delete post
 // assumes req.body takes form { _id:5d91fb30f3f81b282d7be0dd } etc.
 app.post('/remove', async (req, res) => {
-  const result = await collection.deleteOne({
+  const result = await collectionPosts.deleteOne({
     _id: new ObjectId(req.body._id)
   })
 
@@ -110,7 +148,7 @@ app.post('/remove', async (req, res) => {
 
 //update post
 app.post('/update', async (req, res) => {
-  const result = await collection.updateOne(
+  const result = await collectionPosts.updateOne(
     { _id: new ObjectId(req.body._id) },
     { $set: { post: req.body.post } }
   )
@@ -119,7 +157,8 @@ app.post('/update', async (req, res) => {
 })
 
 app.get('/get-username', (req, res) => {
-  res.json({ username: process.env.USERNM });
+  //get username from loggedInUser variable
+  res.json({ username: loggedInUser });
 });
 
 run().catch(console.dir);

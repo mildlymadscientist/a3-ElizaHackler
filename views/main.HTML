@@ -16,13 +16,15 @@
         <h1>Welcome to your blog!</h1>
         <div id="usernameDisplay"></div>
         <form id="postForm">
-            <div class="mb-3">
-                <label for="newPost" class="form-label">Create a new post</label>
-                <textarea id="newPost" name="newPost" class="form-control" rows="3"
+            <div>
+                <label for="newPost">Create a new post</label>
+                <textarea id="newPost" name="newPost" class="tui-input" rows="3"
                     placeholder="Write your post here..."></textarea>
             </div>
             <br>
-            Pick a color!......: <input class="tui-input" type="color" value="#00FF00" id="postColor" /><br>
+            <label for="postColor">Pick a color!......</label>
+            <input class="tui-input" type="color" value="#00FF00" id="postColor" />
+            <br>
             <button type="submit">Post</button>
 
         </form>
