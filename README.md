@@ -145,14 +145,12 @@ Include a very brief summary of your project here. Images are encouraged, along 
 
 13) Implement 12 accessibility tips
 
-13) check lighthouse scores
-
 14) simplify login
 
 
 
 Sources:
-CS guides, in class practice, and a2
+CS guides especially those on js, cookies, express, and mongodb, in class practice servers, and a2
 Non-Designer's Design Book
 https://www.w3schools.com/jsref/met_win_prompt.asp
 https://www.w3schools.com/jsref/met_win_alert.asp
