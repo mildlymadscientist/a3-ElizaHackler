@@ -19,14 +19,17 @@ Pictures in picture folder if needed.
 - Got 100 on all 4 lighthouse tests (pic_3 and pic_4) by keeping things very simple, using only high contrast colors (black and white) and using labels that match names names and using metadata descriptions (which I only forgot because I used the cookies login example as a base). 
 
 *Design/UX*
-- (10 points) Make your site accessible using the [resources and hints available from the W3C](https://www.w3.org/WAI/). Implement/follow twelve tips from their [tips for writing](https://www.w3.org/WAI/tips/writing/), [tips for designing](https://www.w3.org/WAI/tips/designing/), and [tips for development](https://www.w3.org/WAI/tips/developing/). *Note that all twelve must require active work on your part*. For example, even though your page will most likely not have a captcha, you don't get this as one of your twelve tips to follow because you're effectively 
-getting it "for free" without having to actively change anything about your site. Contact the course staff if you have any questions about what qualifies and doesn't qualify in this regard.
-List each tip that you followed and describe what you did to follow it in your site.
 - (5 points) Describe how your site uses the CRAP principles in the Non-Designer's Design Book readings. Which element received the most emphasis (contrast) on each page? How did you use proximity to organize the visual information on your page? What design elements (colors, fonts, layouts, etc.) did you use repeatedly throughout your site? How did you use alignment to organize information and/or increase contrast for particular elements. Write a paragraph of at least 125 words *for each of four principles* (four paragraphs, 500 words in total). 
 
-12) write about CRAP
+Contrast: While the user can choose to add colors to their posts that can seriously detract from the contrast, to increase accessibility and readibility I stuck to just black and white. This might be simple, but it is the standard for most webpages for accessibility reasons. 
 
-13) Implement 12 accessibility tips
+Repetition: I kept font color consistent, as well as font size. I found that repeating these things created a sense of coherency, and just varying font nuances like boldness did enough to differentiate them. 
+
+Alignment: I chose left aligned, as I feel it makes the viewer less confused (god forbid, right-aligned) and more incline to input information. Like it's left aligned, it's right here for you! But I didn't want it to feel very heavy towards one side when there were many posts, so I made the posts span the screen. Also, think of how strange it would look if there were half page color blocks for theposts with colored background. I almost wanted them to feeling like a knitting/crotchetting/weaving project. 
+
+Proximity: I used proximity to give this a simple, old-school feel as I wanted to website to feel a bit like the computer programs that just read you line after line of code (like many, but the computer in Wargames is the only one that comes to mind right now). I kept things close, while grouping and splitting things into forms to prevent it from actually soffocating itself/overlapping and being unreadable. 
+
+AI: Used AI to debug code with copilot, specifically the login function and sending URLs. I used some small examples found by the AI search helper to integrate into my code, but nothing large. 
 
 Sources:
 CS guides especially those on js, cookies, express, and mongodb, in class practice servers, and a2
