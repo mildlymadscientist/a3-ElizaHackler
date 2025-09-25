@@ -4,12 +4,14 @@ const express = require('express'),
   app = express(),
   dreams = []
 
+//middleware
 app.use(express.static('public'))
 app.use(express.static('views'))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
+//connect to MongoDB with information in .env file
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.USERNM}:${process.env.PASS}@${process.env.HOST}/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -21,6 +23,7 @@ const client = new MongoClient(uri, {
   }
 });
 
+//make variables
 let collectionUsers = null
 let collectionPosts = null
 let loggedInUser = null
@@ -39,85 +42,59 @@ async function run() {
   }
 }
 
+//makes sure database is connected because it kept erroring
 app.use((req, res, next) => {
   if (collectionUsers !== null) {
     next()
-  } else {
-    res.status(503).send()
   }
 })
 
+//login from username and password
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  try {
-    // Check if user exists
-    const user = await collectionUsers.findOne({ username });
+  //findOne returns a promise so await it
+  const userExists = await collectionUsers.findOne({ username });
 
-    if (user) {
-      // User exists, check password
-      if (user.password === password) {
-        // Login success
-        loggedInUser = username;
-        console.log("Login successful for user: " + username);
-        return res.redirect('/main.HTML');
-      } else {
-        // Incorrect password
-        console.log("Incorrect password for user: " + username);
-        return res.sendFile(__dirname + '/views/index.html');
-      }
-    } else {
-      // User doesn't exist, create new user
-      console.log("Creating new user: " + username);
-      const result = await collectionUsers.insertOne({ username, password });
+  //if username is in database
+  if (userExists) {
+
+    //if password is right
+    if (userExists.password === password) {
+      //save username
       loggedInUser = username;
-      console.log(`New user created with id: ${result.insertedId}`);
-      return res.redirect('/main.HTML?newUser=true');
+      return res.redirect('/main.HTML');
+    } else {
+      return res.sendFile(__dirname + '/views/index.html');
     }
-  } catch (err) {
-    console.error("Database error:", err);
-    return res.status(500).send('Database error');
+  } else {
+
+    //make new user
+    console.log("Creating new user: " + username);
+    const result = await collectionUsers.insertOne({ username, password });
+
+    //save username
+    loggedInUser = username;
+
+    //send new user status in URL
+    return res.redirect('/main.HTML?newUser=true');
   }
+
 });
 
-// app.post('/login', (req, res) => {
-//   const { username, password } = req.body;
-//   //if username and password pair are in blogUsers database
-//   if (collectionUsers.findOne({ username, password }) !== null) {
-//     loggedInUser = username;
-//     return res.redirect('/main.html');
-//   }
-//   //if cannot find username in database
-//   else if (collectionUsers.findOne({ username }) === null) {
-//     console.log("Creating new user: " + username);
-//     //create new user with username and password
-//     collectionUsers.insertOne({ username: username, password: password })
-//       .then(result => {
-//         console.log(`New user created with the following id: ${result.insertedId}`);
-//       })
-//       .catch(err => {
-//         console.error(err);
-//         res.status(500).json({ error: 'Database error' });
-//       });
-
-//     loggedInUser = username;
-//     return res.redirect('/main.html');
-//   } else {
-//     console.log("Incorrect password for user: " + username);
-//     res.sendFile(__dirname + '/views/index.html')
-//   };
-// });
-
+//gets all posts for username
 app.get('/user-posts', async (req, res) => {
+
+  //make sure database is connected
   if (collectionPosts !== null) {
+
+    //get logged in username
     const username = loggedInUser;
-    try {
-      const posts = await collectionPosts.find({ username: username }).toArray();
-      res.json(posts);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Database error' });
-    }
+
+    //make sure user
+    const posts = await collectionPosts.find({ username: username }).toArray();
+    res.json(posts);
+
   } else {
     res.status(503).json({ error: 'Database not connected' });
   }
@@ -125,15 +102,18 @@ app.get('/user-posts', async (req, res) => {
 
 //add post attached to post button
 app.post('/add', async (req, res) => {
-  if (collectionPosts !== null) {
-    const { post, username, color } = req.body;
-    const date = new Date();
-    await collectionPosts.insertOne({ username, post, date, color });
-    const posts = await collectionPosts.find({ username }).toArray();
-    res.json(posts);
-  } else {
-    res.status(503).json({ error: 'Database not connected' });
-  }
+  //get post info from body
+  const { post, username, color } = req.body;
+
+  //get date
+  const date = new Date();
+
+  //insert into database
+  await collectionPosts.insertOne({ username, post, date, color });
+
+  //get all posts again
+  const posts = await collectionPosts.find({ username }).toArray();
+  res.json(posts);
 })
 
 //delete post

@@ -1,83 +1,114 @@
+//make blank username
 let username = "";
 
+//load posts from database
 function loadPosts() {
+  //call user-posts with fetch
   fetch('/user-posts')
+
     .then(res => res.json())
     .then(posts => {
+      //get each post
       const postsList = document.getElementById('postsList');
+
+      //to keep from adding to list repeatedly
       postsList.innerHTML = '';
-      if (Array.isArray(posts)) {
-        posts.forEach(post => {
-          const li = document.createElement('li');
-          li.textContent = `${post.post} - ${new Date(post.date).toLocaleString()}`;
-          if (post.color) {
-            li.style.backgroundColor = post.color;
-          }
-          // Add Edit button
-          const editBtn = document.createElement('button');
-          editBtn.textContent = 'Edit';
-          editBtn.onclick = () => {
-            // Show prompt and send edit request
-            const newText = prompt('Edit your post:', post.post);
-            if (newText !== null) {
-              fetch('/update', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ _id: post._id, post: newText })
-              }).then(() => loadPosts());
-            }
-          };
-          // Add Delete button
-          const delBtn = document.createElement('button');
-          delBtn.textContent = 'Delete';
-          delBtn.onclick = () => {
-            fetch('/remove', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ _id: post._id })
-            }).then(() => loadPosts());
-          };
-          li.appendChild(editBtn);
-          li.appendChild(delBtn);
-          postsList.appendChild(li);
-        });
-      } else {
-        console.error('Error fetching posts:', posts);
-      }
+
+      //for each post add to list
+      posts.forEach(post => {
+        //make item
+        const li = document.createElement('li');
+        li.textContent = `${post.post} - ${new Date(post.date).toLocaleString()}`;
+        if (post.color) {
+          li.style.backgroundColor = post.color;
+        }
+
+        //make edit button
+        const editBtn = editPost(post);
+
+        //make delete button
+        const delBtn = deletePost(post);
+
+        //add to list
+        li.appendChild(editBtn);
+        li.appendChild(delBtn);
+        postsList.appendChild(li);
+      });
+
     });
 }
 
+function editPost(post) {
+  const editBtn = document.createElement('button');
+  editBtn.textContent = 'Edit';
+  editBtn.onclick = () => {
+
+    //use prompt to get new text
+    const updated = prompt('Edit your post:', post.post);
+    if (updated !== null) {
+      fetch('/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ _id: post._id, post: updated })
+      }).then(() => loadPosts());
+    }
+  };
+  return editBtn;
+}
+
+function deletePost(post) {
+  const delBtn = document.createElement('button');
+  delBtn.textContent = 'Delete';
+  delBtn.onclick = () => {
+    fetch('/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ _id: post._id })
+    }).then(() => loadPosts());
+  };
+  return delBtn;
+}
+
+//on load get posts from username
 window.onload = function () {
-  // Check if this is a new user
+
+  //get URL and see if new user
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('newUser') === 'true') {
+    //use alert
     alert('Account created!');
   }
 
-  // Fetch and display username
+  //get username from server
   fetch('/get-username')
     .then(res => res.json())
     .then((data) => {
-      username = data.username; // Store username for later use
+      username = data.username;
       document.getElementById('usernameDisplay').textContent = `User: ${username}`;
     }
     );
 
+  //get posts
   loadPosts();
 };
 
+//add post attached to post button
 document.getElementById('postForm').addEventListener('submit', function (e) {
-  e.preventDefault(); // Prevents the page from reloading
-  const newPost = document.getElementById('newPost').value;
+  e.preventDefault();
+  const post = document.getElementById('newPost').value;
   const color = document.getElementById('postColor').value;
+
+  //send post, username, color to server 
   fetch('/add', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ post: newPost, username: username, color: color })
+    body: JSON.stringify({ post: post, username: username, color: color })
   })
     .then(res => res.json())
     .then(() => {
       document.getElementById('newPost').value = '';
-      loadPosts(); // Reload posts after adding a new one
+
+      //load posts again to get new post
+      loadPosts();
     });
 });
