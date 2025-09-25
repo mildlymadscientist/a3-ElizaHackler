@@ -21,9 +21,9 @@ Pictures in picture folder if needed.
 *Design/UX*
 - (5 points) Describe how your site uses the CRAP principles in the Non-Designer's Design Book readings. Which element received the most emphasis (contrast) on each page? How did you use proximity to organize the visual information on your page? What design elements (colors, fonts, layouts, etc.) did you use repeatedly throughout your site? How did you use alignment to organize information and/or increase contrast for particular elements. Write a paragraph of at least 125 words *for each of four principles* (four paragraphs, 500 words in total). 
 
-Contrast: While the user can choose to add colors to their posts that can seriously detract from the contrast, to increase accessibility and readibility I stuck to just black and white. This might be simple, but it is the standard for most webpages for accessibility reasons. 
+Contrast: While the user can choose to add colors to their posts that can seriously detract from the contrast, to increase accessibility and readibility I stuck to just black and white. This might be simple, but it is the standard for most webpages for accessibility reasons. The user, however, can make as much contrast as they want by breaking up their blog posts with different colors, shades, and tones. I wanated some customizibility which sacrificed perfect contrast. 
 
-Repetition: I kept font color consistent, as well as font size. I found that repeating these things created a sense of coherency, and just varying font nuances like boldness did enough to differentiate them. 
+Repetition: I kept font color consistent, as well as font size. I found that repeating these things created a sense of coherency, and just varying font nuances like boldness did enough to differentiate them. I feel that repitition serves the goal of having it look very computer-programesque. I wanted it to feel robotic, not natural, so i kept most things consistent and did little to break from it. 
 
 Alignment: I chose left aligned, as I feel it makes the viewer less confused (god forbid, right-aligned) and more incline to input information. Like it's left aligned, it's right here for you! But I didn't want it to feel very heavy towards one side when there were many posts, so I made the posts span the screen. Also, think of how strange it would look if there were half page color blocks for theposts with colored background. I almost wanted them to feeling like a knitting/crotchetting/weaving project. 
 
@@ -38,6 +38,7 @@ https://www.w3schools.com/jsref/met_win_prompt.asp
 https://www.w3schools.com/jsref/met_win_alert.asp
 https://stackoverflow.com/questions/486896/adding-a-parameter-to-the-url-with-javascript
 
+More specifics:
 
 Assignment 3 - Persistence: Two-tier Web Application with Database, Express server, and CSS template
 
@@ -55,7 +56,7 @@ CSS:
 - Used TUI, tried to use built in TUI things but used some simple formatting too. 
 
 JavaScript:  
-- At minimum, a small amount of front-end JavaScript to get / fetch data from the server. See the [previous assignment](https://github.com/jmcuneo/a2-shortstack-a25) for reference.
+- Front-end to fetch information to put it into lists, add/update/delete, send prompts/alerts. 
 
 Node.js:  
 - Created an express server and a mongoDB database.
